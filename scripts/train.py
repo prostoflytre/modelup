@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 
-import os
+import os, sys
 import argparse
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.utils import setup_logging, load_config
 from src.data_loader import DataProcessor
 from src.trainer import APITrainer
+
+
 
 def main():
     parser = argparse.ArgumentParser(description='Fine-tune DeepSeek model via LM Studio API')
@@ -12,8 +15,6 @@ def main():
                        help='Path to config file')
     parser.add_argument('--data_path', type=str, default=None,
                        help='Path to training data')
-    parser.add_argument('--create_sample', action='store_true',
-                       help='Create sample dataset for testing')
     
     args = parser.parse_args()
     
@@ -28,14 +29,7 @@ def main():
     
     # Обработчик данных
     data_processor = DataProcessor(config)
-    
-    # Создание примерного датасета если нужно
-    if args.create_sample:
-        sample_path = "./data/raw/sample_data.jsonl"
-        os.makedirs(os.path.dirname(sample_path), exist_ok=True)
-        data_processor.create_sample_dataset(sample_path)
-        logger.info(f"Sample dataset created at {sample_path}")
-        args.data_path = sample_path
+
     
     # Проверка пути к данным
     if not args.data_path:

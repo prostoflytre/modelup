@@ -1,6 +1,10 @@
 import json
 import argparse
 import os
+import sys
+
+# Добавляем корневую директорию в путь Python
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def convert_dataset(input_file, output_file):
     """Конвертирует ваш датасет в формат для обучения"""
