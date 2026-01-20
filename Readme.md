@@ -39,7 +39,7 @@
 
 ### Python зависимости
 ```bash
-pip install requests
+pip install -r requirements.txt
 ```
 
 ## 🔧 Установка
@@ -52,7 +52,7 @@ cd modelup
 
 2. **Установите зависимости**
 ```bash
-pip install requests
+pip install -r requirements.txt
 ```
 
 3. **Настройте SSH ключ**

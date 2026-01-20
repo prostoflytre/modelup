@@ -1,4 +1,4 @@
-import logging
+reimport logging
 import time
 from tqdm import tqdm
 from .utils import make_api_request, generate_with_retry

@@ -9,11 +9,10 @@ from transformers import TrainingArguments, Trainer
 import sys
 
 # Параметры
-model_name = "mistralai/Mistral-7B-v0.1"
-output_dir = "/root/training/Mistral-lora-output"
+model_name = "openai/gpt-oss-20b"
+output_dir = "/root/training/Gpt-QLora-output"
 data_path = "/root/training/data.jsonl"
 epochs = 3
-batch_size = 16
 
 print(f"Loading model {model_name}...")
 
@@ -40,8 +39,8 @@ model = prepare_model_for_kbit_training(model)
 lora_config = LoraConfig(
     r=8,
     lora_alpha=16,
-    target_modules=["q_proj", "v_proj"],
-    lora_dropout=0.05,
+    target_modules=["all-linear"],
+    lora_dropout=0,
     bias="none",
     task_type="CAUSAL_LM"
 )
@@ -68,7 +67,7 @@ dataset = dataset.map(formatting_func, remove_columns=[col for col in dataset["t
 
 # Токенизация
 def tokenize_func(examples):
-    result = tokenizer(examples["text"], padding="max_length", max_length=512, truncation=True)
+    result = tokenizer(examples["text"], padding="max_length", max_length=2048, truncation=True)
     result["labels"] = result["input_ids"].copy()
     return result
 
@@ -79,14 +78,14 @@ training_args = TrainingArguments(
     output_dir=output_dir,
     overwrite_output_dir=True,
     num_train_epochs=epochs,
-    per_device_train_batch_size=batch_size,
+    per_device_train_batch_size=2,
     save_steps=50,
     save_total_limit=3,
     logging_steps=10,
-    learning_rate=2e-4,
+    learning_rate=1e-4,
     weight_decay=0.001,
-    warmup_steps=10,
-    gradient_accumulation_steps=2, # Эффективный батч = batch_size * 2
+    warmup_steps=50,
+    gradient_accumulation_steps=8, # Эффективный батч = batch_size * 2
     fp16=True,
     gradient_checkpointing=True,
     report_to="none",  # Отключаем WandB и другие логгеры

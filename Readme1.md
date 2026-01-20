@@ -10,8 +10,8 @@
 
 ### 1. Клонирование и установка
 ```bash
-git clone <https://github.com/prostoflytre/modelup>
-cd deepseek-finetune
+git clone https://github.com/prostoflytre/modelup
+cd modelup
 pip install -r requirements.txt
 ```
 
